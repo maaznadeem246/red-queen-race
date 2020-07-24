@@ -3,7 +3,7 @@ import "./styles.css";
 import useWebAnimations from "@wellyshen/use-web-animations";
 
 export default function App() {
-  const { ref, playState } = useWebAnimations({
+  const redQuenRef = useWebAnimations({
     keyframes: {
       transform: ["translateY(0)", "translateY(-100%)"]
     },
@@ -24,7 +24,7 @@ export default function App() {
           <div id="red-queen_and_alice">
             <img
               id="red-queen_and_alice_sprite"
-              ref={ref}
+              ref={redQuenRef.ref}
               src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/sprite_running-alice-queen_small.png"
               srcset="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/sprite_running-alice-queen.png 2x"
               alt="Alice and the Red Queen running to stay in place."
