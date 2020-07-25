@@ -15,6 +15,11 @@ const sceneryTimingForeground = {
   iterations: Infinity
 };
 
+const sceneryTimingBackground = {
+  duration: 36000,
+  iterations: Infinity
+};
+
 export default function App() {
   const redQuenRef = useWebAnimations({
     keyframes: {
@@ -29,20 +34,107 @@ export default function App() {
     }
   });
 
-  const foreGround1 = useWebAnimations({
+  const backGround1Movement = useWebAnimations({
     keyframes: {
       ...sceneryFrames
     },
     timing: {
-      duration: 12000,
-      iterations: Infinity
+      ...sceneryTimingBackground
     }
   });
-  //console.log(foreGround1.getAnimation());
-  //foreGround1.getAnimation().currentTime =  foreGround1.getAnimation().effect.getComputedTiming().duration / 2;
+
+  const backGround2Movement = useWebAnimations({
+    keyframes: {
+      ...sceneryFrames
+    },
+    timing: {
+      ...sceneryTimingBackground
+    }
+  });
+
+  const foreGround1Movement = useWebAnimations({
+    keyframes: {
+      ...sceneryFrames
+    },
+    timing: {
+      ...sceneryTimingForeground
+    }
+  });
+
+  const foreGround2Movement = useWebAnimations({
+    keyframes: {
+      ...sceneryFrames
+    },
+    timing: {
+      ...sceneryTimingForeground
+    }
+  });
+
+  if (
+    foreGround1Movement.getAnimation() &&
+    backGround1Movement.getAnimation()
+  ) {
+    foreGround1Movement.getAnimation().currentTime =
+      foreGround1Movement.getAnimation().effect.getComputedTiming().duration /
+      2;
+
+    backGround1Movement.getAnimation().currentTime =
+      backGround1Movement.getAnimation().effect.getComputedTiming().duration /
+      2;
+  }
+
+  const adjustBackgroundPlayback = () => {
+    let sceneries = [
+      foreGround1Movement,
+      foreGround2Movement,
+      backGround1Movement,
+      backGround2Movement
+    ];
+
+    let redQueenPlaybackRate = redQuenRef.getAnimation().playbackRate;
+
+    if (redQueenPlaybackRate < 0.8) {
+      sceneries.forEach(function(anim) {
+        anim.getAnimation().updatePlaybackRate((redQueenPlaybackRate / 2) * -1);
+      });
+    } else if (redQueenPlaybackRate > 1.2) {
+      sceneries.forEach(function(anim) {
+        anim.getAnimation().updatePlaybackRate(redQueenPlaybackRate / 2);
+      });
+    } else {
+      sceneries.forEach(function(anim) {
+        anim.getAnimation().updatePlaybackRate(0);
+      });
+    }
+  };
+
+  if (redQuenRef.getAnimation()) {
+    adjustBackgroundPlayback();
+
+    setInterval(function() {
+      /* Set decay */
+      let redQueenPlaybackRate = redQuenRef.getAnimation().playbackRate;
+      if (redQueenPlaybackRate > 0.4) {
+        redQuenRef
+          .getAnimation()
+          .updatePlaybackRate(redQueenPlaybackRate * 0.9);
+      }
+      adjustBackgroundPlayback();
+    }, 3000);
+  }
+
+  const goFaster = () => {
+    let redQueenPlaybackRate = redQuenRef.getAnimation().playbackRate;
+    redQuenRef.getAnimation().updatePlaybackRate(redQueenPlaybackRate * 1.1);
+    adjustBackgroundPlayback();
+  };
 
   return (
-    <div className="App">
+    <div
+      className="App"
+      onClick={() => goFaster()}
+      onTouchStart={() => goFaster()}
+    >
       <div className="wrapper">
         <div className="sky" />
         <div className="earth">
@@ -57,7 +149,11 @@ export default function App() {
           </div>
         </div>
 
-        <div className="scenery" id="foreground1" ref={foreGround1.ref}>
+        <div
+          className="scenery"
+          id="foreground1Movement"
+          ref={foreGround1Movement.ref}
+        >
           <img
             id="palm3"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm3_small.png"
@@ -65,7 +161,11 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div className="scenery" id="foreground2">
+        <div
+          className="scenery"
+          id="foreground2Movement"
+          ref={foreGround2Movement.ref}
+        >
           <img
             id="bush"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/bush_small.png"
@@ -79,7 +179,11 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div className="scenery" id="background1">
+        <div
+          className="scenery"
+          id="background1Movement"
+          ref={backGround1Movement.ref}
+        >
           <img
             id="r_pawn_upright"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_pawn_upright_small.png"
@@ -99,7 +203,11 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div className="scenery" id="background2">
+        <div
+          className="scenery"
+          id="background2Movement"
+          ref={backGround2Movement.ref}
+        >
           <img
             id="r_pawn"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_pawn_small.png"
