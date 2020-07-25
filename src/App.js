@@ -2,10 +2,23 @@ import React from "react";
 import "./styles.css";
 import useWebAnimations from "@wellyshen/use-web-animations";
 
+const spritFrames = {
+  transform: ["translateY(0)", "translateY(-100%)"]
+};
+
+const sceneryFrames = {
+  transform: ["translateX(100%)", "translateX(-100%)"]
+};
+
+const sceneryTimingForeground = {
+  duration: 12000,
+  iterations: Infinity
+};
+
 export default function App() {
   const redQuenRef = useWebAnimations({
     keyframes: {
-      transform: ["translateY(0)", "translateY(-100%)"]
+      ...spritFrames
     },
     timing: {
       easing: "steps(7, end)",
@@ -16,11 +29,23 @@ export default function App() {
     }
   });
 
+  const foreGround1 = useWebAnimations({
+    keyframes: {
+      ...sceneryFrames
+    },
+    timing: {
+      duration: 12000,
+      iterations: Infinity
+    }
+  });
+  //console.log(foreGround1.getAnimation());
+  //foreGround1.getAnimation().currentTime =  foreGround1.getAnimation().effect.getComputedTiming().duration / 2;
+
   return (
     <div className="App">
-      <div class="wrapper">
-        <div class="sky" />
-        <div class="earth">
+      <div className="wrapper">
+        <div className="sky" />
+        <div className="earth">
           <div id="red-queen_and_alice">
             <img
               id="red-queen_and_alice_sprite"
@@ -32,7 +57,7 @@ export default function App() {
           </div>
         </div>
 
-        <div class="scenery" id="foreground1">
+        <div className="scenery" id="foreground1" ref={foreGround1.ref}>
           <img
             id="palm3"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/palm3_small.png"
@@ -40,7 +65,7 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div class="scenery" id="foreground2">
+        <div className="scenery" id="foreground2">
           <img
             id="bush"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/bush_small.png"
@@ -54,7 +79,7 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div class="scenery" id="background1">
+        <div className="scenery" id="background1">
           <img
             id="r_pawn_upright"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_pawn_upright_small.png"
@@ -74,7 +99,7 @@ export default function App() {
             alt=" "
           />
         </div>
-        <div class="scenery" id="background2">
+        <div className="scenery" id="background2">
           <img
             id="r_pawn"
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/641/r_pawn_small.png"
